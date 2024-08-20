@@ -1,70 +1,66 @@
 "use client";
 
-import React, { CSSProperties, useEffect, useRef } from "react";
-import { init, getInstanceByDom } from "echarts";
-import type { ECharts } from "echarts";
+import React, { useRef, useEffect } from "react";
+import { init, getInstanceByDom, ECharts } from "echarts";
+import type { CSSProperties } from "react";
+import { EChartOption } from "echarts";
 
-export type EchartProps = {
-  option: any; // for now this is any until i figure out the actual typing from the lib EChartsOption is not it
-  settings?: any; // unsure what this even is to be honest.
+export interface ReactEChartsProps {
+  option: EChartOption;
   style?: CSSProperties;
+  settings?: any;
   loading?: boolean;
-};
+  theme?: "light" | "dark";
+}
 
-export default function Echart({
+export default function ReactECharts({
   option,
-  settings,
   style,
+  settings,
   loading,
-}: EchartProps) {
+  theme,
+}: ReactEChartsProps): JSX.Element {
   const chartRef = useRef<HTMLDivElement>(null);
 
-  useEffect(function () {
+  useEffect(() => {
+    // Initialize chart
     let chart: ECharts | undefined;
     if (chartRef.current !== null) {
-      chart = init(chartRef.current);
+      chart = init(chartRef.current, theme);
     }
 
-    function resize() {
+    // Add chart resize listener
+    // ResizeObserver is leading to a bit janky UX
+    function resizeChart() {
       chart?.resize();
     }
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", resizeChart);
 
-    return function () {
+    // Return cleanup function
+    return () => {
       chart?.dispose();
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", resizeChart);
     };
-  }, []);
+  }, [theme]);
 
   useEffect(() => {
     // Update chart
     if (chartRef.current !== null) {
       const chart = getInstanceByDom(chartRef.current);
-      chart?.setOption(option, settings);
+      chart.setOption(option, settings);
     }
-  }, [option, settings, style]);
+  }, [option, settings, theme]); // Whenever theme changes we need to add option and setting due to it being deleted in cleanup function
 
-  useEffect(
-    function () {
-      if (chartRef.current !== null) {
-        const chart = getInstanceByDom(chartRef.current);
+  useEffect(() => {
+    // Update chart
+    if (chartRef.current !== null) {
+      const chart = getInstanceByDom(chartRef.current);
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      loading === true ? chart.showLoading() : chart.hideLoading();
+    }
+  }, [loading, theme]);
 
-        loading === true ? chart?.showLoading() : chart?.hideLoading();
-      }
-    },
-    [loading],
-  );
-
-  // make sure we dont have self closing div tags at all
-  // these are giga bad
   return (
-    <div
-      ref={chartRef}
-      style={{
-        width: "100%",
-        height: "100px",
-        ...style,
-      }}
-    ></div>
+    <div ref={chartRef} style={{ width: "100%", height: "100px", ...style }} />
   );
 }

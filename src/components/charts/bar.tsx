@@ -29,9 +29,14 @@ export default async function Bar({ api, axis, style }: BarProps) {
         ...style,
       }}
       option={{
+        tooltip: {
+          show: true,
+        },
         xAxis: {
           type: axis.x.type,
           data: labels,
+          nameGap: 5,
+          nameRotate: 45,
         },
         yAxis: {
           type: axis.y.type,
