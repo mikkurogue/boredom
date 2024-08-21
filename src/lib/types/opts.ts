@@ -8,13 +8,18 @@ type AxisType = "category" | "value";
 
 type AxisOpts = {
   x: {
-    type: AxisType;
+    type?: AxisType;
     labels?: string[];
   };
   y: {
-    type: AxisType;
+    type?: AxisType;
     labels?: string[];
   };
 };
 
-export type { ApiOpts, AxisOpts, AxisType };
+type DataStruct = {
+  series: any[];
+  labels: string[];
+};
+
+export type { ApiOpts, AxisOpts, AxisType, DataStruct };
