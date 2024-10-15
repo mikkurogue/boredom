@@ -5,13 +5,13 @@ import { init, getInstanceByDom, ECharts } from "echarts";
 import type { CSSProperties } from "react";
 import { EChartOption } from "echarts";
 
-export interface ReactEChartsProps {
+type ReactEChartsProps = {
   option: EChartOption;
   style?: CSSProperties;
-  settings?: any;
+  settings?: { [K: string]: string | object };
   loading?: boolean;
   theme?: "light" | "dark";
-}
+};
 
 export default function ReactECharts({
   option,

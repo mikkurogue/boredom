@@ -3,8 +3,8 @@ import { CubeJsFilter, CubeJsQuery, Result } from "./types/cubejs-query";
 
 async function fetchCubeJsData<T>(
   cube: string,
-  dimensions: string[],
-  measures: string[],
+  dimensions: string[], // AllDimensions[] - NOTE: Here we can maybe make a type that can determine which product is being used for the correct cube dims/measures
+  measures: string[], //AllMeasures[]
   filters?: CubeJsFilter,
 ): Promise<Result<T>> {
   const query: CubeJsQuery = {
