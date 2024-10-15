@@ -1,6 +1,10 @@
 import { AxisOpts, DataStruct } from "@/lib/types/opts";
 import Echart from "./Echart";
 import { CSSProperties } from "react";
+import mergeChartOptions from "@/lib/merge-chart-opts";
+import { merge } from "lodash";
+import { BarSeriesOption, EChartOption, EChartsOption } from "echarts";
+import { defaultBarSeriesOptions } from "@/lib/default-series-options";
 
 type BarPourProps = {
   data: DataStruct;
@@ -16,32 +20,18 @@ export default function BarPour({ data, options, style }: BarPourProps) {
   // The only thing this component does is render the chart with some default options for the chart options required
   // in this instance it is for a typical normal Bar chart.
 
+  const opts = mergeChartOptions(
+    "bar",
+    defaultBarSeriesOptions(options, data),
+  ) as EChartOption;
+
   return (
     <Echart
       style={{
         height: "250px",
         ...style,
       }}
-      option={{
-        tooltip: {
-          show: true,
-        },
-        xAxis: {
-          type: options?.x?.type ? options?.x?.type : "category",
-          data: data.labels,
-          nameGap: 5,
-          nameRotate: 45,
-        },
-        yAxis: {
-          type: options?.y?.type ? options?.y?.type : "value",
-        },
-        series: [
-          {
-            data: data.series,
-            type: "bar",
-          },
-        ],
-      }}
+      option={opts}
     />
   );
 }

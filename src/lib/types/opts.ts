@@ -22,4 +22,6 @@ type DataStruct = {
   labels: string[];
 };
 
-export type { ApiOpts, AxisOpts, AxisType, DataStruct };
+type SeriesStruct = string[] | number[];
+
+export type { ApiOpts, AxisOpts, AxisType, DataStruct, SeriesStruct };
