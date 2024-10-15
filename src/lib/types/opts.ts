@@ -1,7 +1,11 @@
 type ApiOpts = {
   url: string;
   endpoint: string;
-  body?: { [K: string]: any };
+  body?: {
+    [K: string]: {
+      [K: string]: string | number | { [J: string]: string | number };
+    };
+  };
 };
 
 type AxisType = "category" | "value";
